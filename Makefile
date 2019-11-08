@@ -6,7 +6,7 @@ CC ?= gcc
 CC_ARGS ?= -Wall
 OPT_LVL ?= -O2
 INCLUDE ?= -Iinclude
-SRC ?= src/*.c src/*/*.c
+SRC ?= $(shell find src/ -name '*.c')
 OUTPUT ?= -o $(EXE)
 
 GCOVARGS ?= -fprofile-arcs -ftest-coverage -fPIC
