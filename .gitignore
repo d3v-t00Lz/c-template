@@ -1,2 +1,5 @@
 *.swp
 hello
+coverage*.html
+*.gcda
+*.gcno

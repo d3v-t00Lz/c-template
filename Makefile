@@ -10,6 +10,7 @@ SRC ?= src/*.c src/*/*.c
 OUTPUT ?= -o $(EXE)
 
 GCOVARGS ?= -fprofile-arcs -ftest-coverage -fPIC
+BROWSER ?= firefox-wayland
 
 DESTDIR ?=
 BINDIR ?= /usr/bin
@@ -19,7 +20,7 @@ all:
 	$(CC) $(CC_ARGS) $(OPT_LVL) $(INCLUDE) $(SRC) $(OUTPUT)
 
 clean:
-	rm -f $(EXE)
+	rm -f $(EXE) coverage*.html *.gcda *.gcno
 
 debug:
 	$(CC) $(CC_ARGS) -O0 -g $(INCLUDE) $(SRC) $(OUTPUT)
@@ -37,3 +38,4 @@ test:
 	$(CC) $(CC_ARGS) -O0 -g $(GCOVARGS) $(INCLUDE) $(SRC) $(OUTPUT)
 	valgrind ./$(EXE)
 	gcovr -r . --html --html-details -o coverage.html
+	$(BROWSER) *.html
