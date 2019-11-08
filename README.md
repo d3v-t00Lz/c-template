@@ -9,5 +9,8 @@ This is a skeleton project for a C program with a focus on unit testing.
 Run `make test` to run the program through `valgrind` and generate a coverage
 report.
 
-
+# Requirements
+- gcc (or bring your own compiler using `CC=$compiler make ...`)
+- valgrind (for `make test`)
+- gcovr (for `make test` code coverage report)
 
