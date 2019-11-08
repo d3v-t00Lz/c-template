@@ -1,3 +1,6 @@
+#ifndef MYSTRUCT_H
+#define MYSTRUCT_H
+
 /* An example struct
  */
 struct MyStruct{
@@ -18,3 +21,5 @@ struct MyStruct *MyStructFactory(
 char* MyStructRepr(
     struct MyStruct *self
 );
+
+#endif  /* MYSTRUCT_H */

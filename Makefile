@@ -3,13 +3,10 @@
 EXE ?= hello
 
 CC ?= gcc
-CC_ARGS ?= -Wall
+CC_ARGS ?= -Wall -fPIC
 OPT_LVL ?= -O2
-INCLUDE ?= -Iinclude
-SRC ?= $(shell find src/ -name '*.c')
-OUTPUT ?= -o $(EXE)
 
-GCOVARGS ?= -fprofile-arcs -ftest-coverage -fPIC
+GCOVARGS ?= -fprofile-arcs -ftest-coverage  # -fPIC
 BROWSER ?= firefox-wayland
 
 DESTDIR ?=
@@ -17,13 +14,15 @@ BINDIR ?= /usr/bin
 INCLUDEDIR ?= /usr/include
 
 all:
-	$(CC) $(CC_ARGS) $(OPT_LVL) $(INCLUDE) $(SRC) $(OUTPUT)
+	$(CC) \
+	    $(CC_ARGS) $(OPT_LVL) \
+	    $(shell find src cli -name *.c) -Iinclude -o $(EXE)
 
 clean:
-	rm -f $(EXE) coverage*.html *.gcda *.gcno
+	rm -f $(EXE)* coverage*.html *.gcda *.gcno
 
 debug:
-	$(CC) $(CC_ARGS) -O0 -g $(INCLUDE) $(SRC) $(OUTPUT)
+	$(CC) $(CC_ARGS) -O0 -g $(INCLUDE) $(SRC) -o $(EXE)
 
 install:
 	install -d $(DESTDIR)/$(BINDIR)
@@ -34,8 +33,10 @@ install-devel:
 	cp -r include $(DESTDIR)
 
 test:
-	# TODO: Create a separate tests/ directory and compile that instead
-	$(CC) $(CC_ARGS) -O0 -g $(GCOVARGS) $(INCLUDE) $(SRC) $(OUTPUT)
-	valgrind ./$(EXE)
+	$(CC) $(CC_ARGS) -O0 -g $(GCOVARGS) \
+	    $(shell find src tests -name *.c) \
+	    -Iinclude -Itests-include \
+	    -o $(EXE).tests
+	valgrind ./$(EXE).tests
 	gcovr -r . --html --html-details -o coverage.html
 	$(BROWSER) *.html
