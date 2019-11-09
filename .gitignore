@@ -1,8 +1,11 @@
-*.swp
 ctemplate
+ctemplate.gprof
 ctemplate.perf
 ctemplate.tests
 coverage*.html
+gmon.out
+profile.txt
 *.gcda
 *.gcno
 *.rpm
+*.swp

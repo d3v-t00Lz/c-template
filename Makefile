@@ -23,12 +23,22 @@ all:
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
 clean:
-	rm -rf $(NAME) $(NAME).tests html/* *.gcda *.gcno *.rpm
+	rm -rf $(NAME) $(NAME).{tests,perf,gprof} html/* \
+	    *.gcda *.gcno *.rpm
 
 debug:
 	$(CC) \
 	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
+
+gprof:
+	$(CC) $(CC_ARGS) $(OPT_LVL) -pg $(PLAT_FLAGS) \
+	    $(shell find src tests -name *.c) \
+	    -Iinclude \
+	    -o $(NAME).gprof
+	gprof ./$(NAME).gprof > profile.txt
+	less profile.txt
+
 
 install:
 	install -d $(DESTDIR)/$(BINDIR)
@@ -39,7 +49,7 @@ install-devel:
 	cp -r include $(DESTDIR)
 
 perf:
-	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(GCOVARGS) \
+	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).perf

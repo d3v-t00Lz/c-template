@@ -11,7 +11,8 @@ updates to the `Makefile`.
 - 100% unit test coverage out of the box
 - Unit tests binary run through Valgrind to check for memory errors
 - `make rpm` target to generate an RPM package
-- `make perf` target for running through `perf stat`
+- `make perf` target for running the test suite through `perf stat`
+- `make gprof` target for profiling the test suite through `gprof`
 
 Run `make test` to execute the unit tests.
 
