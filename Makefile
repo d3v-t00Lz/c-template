@@ -21,7 +21,7 @@ all:
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
 clean:
-	rm -rf $(NAME) $(NAME).tests html/* *.gcda *.gcno
+	rm -rf $(NAME) $(NAME).tests html/* *.gcda *.gcno *.rpm
 
 debug:
 	$(CC) \
