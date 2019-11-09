@@ -1,5 +1,6 @@
 *.swp
 ctemplate
+ctemplate.perf
 ctemplate.tests
 coverage*.html
 *.gcda

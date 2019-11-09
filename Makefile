@@ -38,6 +38,16 @@ install-devel:
 	install -d $(DESTDIR)
 	cp -r include $(DESTDIR)
 
+perf:
+	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(GCOVARGS) \
+	    $(shell find src tests -name *.c) \
+	    -Iinclude \
+	    -o $(NAME).perf
+	perf stat -e cache-references,cache-misses,dTLB-loads,\
+	dTLB-load-misses,iTLB-loads,iTLB-load-misses,L1-dcache-loads,\
+	L1-dcache-load-misses,L1-icache-loads,L1-icache-load-misses,\
+	branch-misses,LLC-loads,LLC-load-misses ./$(NAME).perf
+
 rpm:
 	$(eval version := $(shell jq .version meta.json))
 	rpmdev-setuptree
@@ -55,7 +65,7 @@ test:
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).tests
-	valgrind ./$(NAME).tests
+	valgrind ./$(NAME).tests --track-origins=yes
 	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
 	    -o html/coverage.html
