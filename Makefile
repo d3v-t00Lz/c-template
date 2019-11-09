@@ -5,6 +5,8 @@ NAME ?= ctemplate
 CC ?= gcc
 CC_ARGS ?= -Wall -fPIC
 OPT_LVL ?= -O2
+# These assume a modern x86 CPU, change or remove for other platforms
+PLAT_FLAGS ?= -mfpmath=sse -mssse3
 
 ARCH ?= $(shell uname --machine)
 
@@ -17,7 +19,7 @@ INCLUDEDIR ?= /usr/include
 
 all:
 	$(CC) \
-	    $(CC_ARGS) $(OPT_LVL) \
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
 clean:
@@ -25,7 +27,7 @@ clean:
 
 debug:
 	$(CC) \
-	    $(CC_ARGS) -O0 -g \
+	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
 install:
@@ -49,7 +51,7 @@ rpm:
 	cp ~/rpmbuild/RPMS/$(ARCH)/$(NAME)-$(version)-1.$(ARCH).rpm .
 
 test:
-	$(CC) $(CC_ARGS) -O0 -g $(GCOVARGS) \
+	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).tests
