@@ -38,7 +38,7 @@ test:
 	    -Iinclude \
 	    -o $(EXE).tests
 	valgrind ./$(EXE).tests
-	mkdir html || true
+	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
 	    -o html/coverage.html
-	$(BROWSER) html/*.html &
+	$(BROWSER) html/coverage.html &
