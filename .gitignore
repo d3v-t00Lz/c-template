@@ -1,9 +1,12 @@
 ctemplate
+ctemplate.debug
 ctemplate.gprof
+ctemplate.pahole
 ctemplate.perf
 ctemplate.tests
 coverage*.html
 gmon.out
+pahole.txt
 profile.txt
 *.gcda
 *.gcno

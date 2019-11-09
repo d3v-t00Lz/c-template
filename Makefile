@@ -18,20 +18,26 @@ BINDIR ?= /usr/bin
 INCLUDEDIR ?= /usr/include
 
 all:
+	# Compile the binary
 	$(CC) \
 	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
 clean:
+	# Remove all temporary files
 	rm -rf $(NAME) $(NAME).{tests,perf,gprof} html/* \
 	    *.gcda *.gcno *.rpm
 
 debug:
+	# Compile the binary with the appropriate flags to debug in GDB
 	$(CC) \
 	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) \
-	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
+	    $(shell find src cli -name *.c) -Iinclude -o $(NAME).debug
+	gdb ./$(NAME).debug
 
 gprof:
+	# Profile which functions the test suite spends the most time
+	# in using gprof
 	$(CC) $(CC_ARGS) $(OPT_LVL) -pg $(PLAT_FLAGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
@@ -39,16 +45,27 @@ gprof:
 	gprof ./$(NAME).gprof > profile.txt
 	less profile.txt
 
-
 install:
+	# Install the binary
 	install -d $(DESTDIR)/$(BINDIR)
 	install $(NAME) $(DESTDIR)/$(BINDIR)/
 
 install-devel:
+	# Install the headers
 	install -d $(DESTDIR)
 	cp -r include $(DESTDIR)
 
+pahole:
+	# Check struct alignnment using pahole
+	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) \
+	    $(shell find src tests -name *.c) \
+	    -Iinclude \
+	    -o $(NAME).pahole
+	pahole $(NAME).pahole > pahole.txt
+	less pahole.txt
+
 perf:
+	# Profile system performance counters using perf
 	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
@@ -59,6 +76,7 @@ perf:
 	branch-misses,LLC-loads,LLC-load-misses ./$(NAME).perf
 
 rpm:
+	# Generate an RPM package
 	$(eval version := $(shell jq .version meta.json))
 	rpmdev-setuptree
 	rm -rf ~/rpmbuild/BUILD/$(NAME)*
@@ -71,11 +89,15 @@ rpm:
 	cp ~/rpmbuild/RPMS/$(ARCH)/$(NAME)-$(version)-1.$(ARCH).rpm .
 
 test:
+	# Compile and run the test suite through Valgrind to check for
+	# memory errors, then generate an HTML code coverage report
+	# using gcovr
 	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).tests
-	valgrind ./$(NAME).tests --track-origins=yes
+	valgrind ./$(NAME).tests --track-origins=yes || \
+	    echo "Valgrind exited $?, try running 'gdb ./$(NAME).tests'"
 	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
 	    -o html/coverage.html

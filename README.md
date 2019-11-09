@@ -18,7 +18,11 @@ Run `make test` to execute the unit tests.
 
 # Requirements
 
+- dwarves/libdwarves (for `make pahole`)
 - gcc (or bring your own compiler using `CC=$compiler make ...`)
-- valgrind (for `make test`)
 - gcovr (for `make test` code coverage report)
+- gdb (for `make debug`)
+- gprof (for `make gprof`)
+- perf (for `make perf`)
+- valgrind (for `make test`)
 
