@@ -35,8 +35,9 @@ install-devel:
 test:
 	$(CC) $(CC_ARGS) -O0 -g $(GCOVARGS) \
 	    $(shell find src tests -name *.c) \
-	    -Iinclude -Itests-include \
+	    -Iinclude \
 	    -o $(EXE).tests
 	valgrind ./$(EXE).tests
-	gcovr -r . --html --html-details -o coverage.html
-	$(BROWSER) *.html
+	gcovr -r . --html --html-details \
+	    -o coverage.html
+	$(BROWSER) *.html &

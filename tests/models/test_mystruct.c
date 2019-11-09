@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "models/mystruct.h"
-#include "models/test_mystruct.h"
+#include "test_mystruct.h"
 
 
 void TestMyStruct(){
