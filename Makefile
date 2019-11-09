@@ -22,7 +22,9 @@ clean:
 	rm -rf $(EXE)* html/* *.gcda *.gcno
 
 debug:
-	$(CC) $(CC_ARGS) -O0 -g $(INCLUDE) $(SRC) -o $(EXE)
+	$(CC) \
+	    $(CC_ARGS) -O0 -g \
+	    $(shell find src cli -name *.c) -Iinclude -o $(EXE)
 
 install:
 	install -d $(DESTDIR)/$(BINDIR)
