@@ -13,6 +13,7 @@ updates to the `Makefile`.
 - `make rpm` target to generate an RPM package
 - `make perf` target for running the test suite through `perf stat`
 - `make gprof` target for profiling the test suite through `gprof`
+- `make pahole` target for analyzing struct alignment using `pahole`
 
 Run `make test` to execute the unit tests.
 
