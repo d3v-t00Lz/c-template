@@ -10,6 +10,7 @@ updates to the `Makefile`.
 - Unit test coverage report
 - 100% unit test coverage out of the box
 - Unit tests binary run through Valgrind to check for memory errors
+- `make rpm` target to generate an RPM package
 
 Run `make test` to execute the unit tests.
 
