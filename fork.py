@@ -33,13 +33,13 @@ def main():
     assert name.replace("_", "").isalpha(), name
     assert len(name) < 20, len(name)
 
-    # Replace 'hello' with $name in files
+    # Replace 'ctemplate' with $name in files
     _(
         "find Makefile .gitignore "
         "-type f "
-        "| xargs sed -i 's/hello/{name}/gI'".format(name=name)
+        "| xargs sed -i 's/ctemplate/{name}/gI'".format(name=name)
     )
-    #_('mv hello.spec {}.spec'.format(name))
+    _('mv ctemplate.spec {}.spec'.format(name))
     _('rm -rf .git')
     _('git init .')
     _('git add .')

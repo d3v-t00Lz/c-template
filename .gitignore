@@ -1,5 +1,7 @@
 *.swp
-hello*
+ctemplate
+ctemplate.tests
 coverage*.html
 *.gcda
 *.gcno
+*.rpm
