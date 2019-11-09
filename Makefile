@@ -25,8 +25,9 @@ all:
 
 clean:
 	# Remove all temporary files
-	rm -rf $(NAME) $(NAME).{tests,perf,gprof} html/* \
-	    *.gcda *.gcno *.rpm
+	rm -rf $(NAME) \
+	    $(NAME).{debug,gprof,pahole,perf,tests} \
+	    html/* *.gcda *.gcno *.rpm gmon.out pahole.txt profile.txt
 
 debug:
 	# Compile the binary with the appropriate flags to debug in GDB
