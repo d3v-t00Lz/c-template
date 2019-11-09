@@ -19,7 +19,7 @@ all:
 	    $(shell find src cli -name *.c) -Iinclude -o $(EXE)
 
 clean:
-	rm -f $(EXE)* coverage*.html *.gcda *.gcno
+	rm -rf $(EXE)* html/* *.gcda *.gcno
 
 debug:
 	$(CC) $(CC_ARGS) -O0 -g $(INCLUDE) $(SRC) -o $(EXE)
@@ -38,6 +38,7 @@ test:
 	    -Iinclude \
 	    -o $(EXE).tests
 	valgrind ./$(EXE).tests
+	mkdir html || true
 	gcovr -r . --html --html-details \
-	    -o coverage.html
-	$(BROWSER) *.html &
+	    -o html/coverage.html
+	$(BROWSER) html/*.html &
