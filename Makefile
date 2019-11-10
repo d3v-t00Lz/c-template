@@ -7,8 +7,10 @@ CC_ARGS ?= -Wall -fPIC
 OPT_LVL ?= -O2
 # These assume a modern x86 CPU, change or remove for other platforms
 PLAT_FLAGS ?= -mfpmath=sse -mssse3
+
 # Only used with the 'debug' target.  -g used for tools other than gdb.
 DEBUG_FLAGS ?= -ggdb3
+DEBUGGER ?= gdb
 
 ARCH ?= $(shell uname --machine)
 
@@ -36,7 +38,7 @@ debug:
 	$(CC) \
 	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME).debug
-	gdb ./$(NAME).debug
+	$(DEBUGGER) ./$(NAME).debug
 
 gprof:
 	# Profile which functions the test suite spends the most time
