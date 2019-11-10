@@ -46,6 +46,10 @@ def main():
     _('git commit -am "Initial commit"')
 
     print("Successfully forked.")
+    print(
+        "Add a new remote origin with "
+        "`git remote add origin $GIT_CLONE_URL`"
+    )
 
 
 if __name__ == "__main__":
