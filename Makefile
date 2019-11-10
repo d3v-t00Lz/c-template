@@ -7,6 +7,8 @@ CC_ARGS ?= -Wall -fPIC
 OPT_LVL ?= -O2
 # These assume a modern x86 CPU, change or remove for other platforms
 PLAT_FLAGS ?= -mfpmath=sse -mssse3
+# Only used with the 'debug' target.  -g used for tools other than gdb.
+DEBUG_FLAGS ?= -ggdb3
 
 ARCH ?= $(shell uname --machine)
 
@@ -32,7 +34,7 @@ clean:
 debug:
 	# Compile the binary with the appropriate flags to debug in GDB
 	$(CC) \
-	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) \
+	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME).debug
 	gdb ./$(NAME).debug
 
