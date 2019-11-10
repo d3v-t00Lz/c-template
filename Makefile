@@ -101,9 +101,9 @@ test:
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).tests
-	valgrind ./$(NAME).tests --track-origins=yes || \
-	    echo "Valgrind exited $?, try running 'gdb ./$(NAME).tests'"
+	# If Valgrind exits non-zero, try running 'gdb ./ctemplate.tests'
+	# to debug the test suite
+	valgrind ./$(NAME).tests --track-origins=yes
 	mkdir html || rm -rf html/*
-	gcovr -r . --html --html-details \
-	    -o html/coverage.html
+	gcovr -r . --html --html-details -o html/coverage.html
 	$(BROWSER) html/coverage.html &
