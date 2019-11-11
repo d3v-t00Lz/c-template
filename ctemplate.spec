@@ -1,5 +1,3 @@
-%define release 1
-
 Summary: TODO
 Name: %{name}
 Version: %{version}

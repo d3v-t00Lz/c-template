@@ -50,6 +50,10 @@ def main():
         "Add a new remote origin with "
         "`git remote add origin $GIT_CLONE_URL`"
     )
+    print(
+        "Update the TODOs in {}.spec if you plan to use "
+        "RPM packaging".format(name)
+    )
 
 
 if __name__ == "__main__":

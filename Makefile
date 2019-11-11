@@ -83,6 +83,7 @@ perf:
 rpm:
 	# Generate an RPM package
 	$(eval version := $(shell jq .version meta.json))
+	$(eval release := $(shell jq .release meta.json))
 	rpmdev-setuptree
 	rm -rf ~/rpmbuild/BUILD/$(NAME)*
 	rm -rf ~/rpmbuild/RPMS/$(NAME)*
@@ -90,6 +91,7 @@ rpm:
 	tar czf ~/rpmbuild/SOURCES/$(NAME)-$(version).tar.gz .
 	rpmbuild -v -ba $(NAME).spec \
 		-D "version $(version)" \
+		-D "release $(release)" \
 		-D "name $(NAME)"
 	cp ~/rpmbuild/RPMS/$(ARCH)/$(NAME)-$(version)-1.$(ARCH).rpm .
 
