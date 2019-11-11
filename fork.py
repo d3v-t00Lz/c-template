@@ -5,11 +5,21 @@ import os
 import sys
 
 
+MESSAGE = """\
+Successfully forked
+
+To add this to an empty Github/Gitlab/etc...:
+$ git remote add origin $GIT_CLONE_URL_GOES_HERE
+$ git push -u origin master
+
+Update the TODOs in {name}.spec if you plan to use
+"RPM packaging
+"""
+
 def _(x):
     print(x)
     retcode = os.system(x)
     assert not retcode, retcode
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -44,17 +54,7 @@ def main():
     _('git init .')
     _('git add .')
     _('git commit -am "Initial commit"')
-
-    print("Successfully forked.")
-    print(
-        "Add a new remote origin with "
-        "`git remote add origin $GIT_CLONE_URL`"
-    )
-    print(
-        "Update the TODOs in {}.spec if you plan to use "
-        "RPM packaging".format(name)
-    )
-
+    print(MESSAGE.format(name=name))
 
 if __name__ == "__main__":
     main()
