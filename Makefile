@@ -41,10 +41,6 @@ bench-test:
 	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
 	    -DITERATIONS=100 -o $(NAME).benchmark
-	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
-	    $(shell find src tests -name *.c) \
-	    -Iinclude \
-	    -o $(NAME).tests
 	# If Valgrind exits non-zero, try running 'gdb ./ctemplate.tests'
 	# to debug the test suite
 	valgrind ./$(NAME).benchmark --track-origins=yes
