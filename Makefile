@@ -86,6 +86,14 @@ install-devel:
 	install -d $(DESTDIR)
 	cp -r include $(DESTDIR)
 
+lines-of-code:
+	# source code
+	find src -name '*.c' -exec cat {} \; | wc -l
+	# tests
+	find tests -name '*.c' -exec cat {} \; | wc -l
+	# headers
+	find include -name '*.h' -exec cat {} \; | wc -l
+
 pahole:
 	# Check struct alignnment using pahole
 	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) \
