@@ -45,7 +45,9 @@ bench-test:
 	# to debug the test suite
 	valgrind ./$(NAME).benchmark --track-origins=yes
 	mkdir html || rm -rf html/*
-	gcovr -r . --html --html-details -o html/coverage.html
+	gcovr -r . --html --html-details \
+		--gcov-exclude=tests \
+		-o html/coverage.html
 	$(BROWSER) html/coverage.html &
 	# NOTE: You do not need to cover all lines, this is simply for
 	# 	debugging purposes
@@ -131,5 +133,7 @@ test:
 	# to debug the test suite
 	valgrind ./$(NAME).tests --track-origins=yes
 	mkdir html || rm -rf html/*
-	gcovr -r . --html --html-details -o html/coverage.html
+	gcovr -r . --html --html-details \
+		--gcov-exclude=bench \
+		-o html/coverage.html
 	$(BROWSER) html/coverage.html &
