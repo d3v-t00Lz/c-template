@@ -10,12 +10,15 @@ updates to the `Makefile`.
 - Unit test coverage report
 - 100% unit test coverage out of the box
 - Unit tests binary run through Valgrind to check for memory errors
+- Benchmark suite
 - `make rpm` target to generate an RPM package
-- `make perf` target for running the test suite through `perf stat`
-- `make gprof` target for profiling the test suite through `gprof`
+- `make perf` target for running the benchmark suite through `perf stat`
+- `make gprof` target for profiling the benchmark suite through `gprof`
 - `make pahole` target for analyzing struct alignment using `pahole`
 
 Run `make test` to execute the unit tests.
+
+Run `make bench` to execute the benchmarks.
 
 # Requirements
 
