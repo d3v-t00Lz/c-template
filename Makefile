@@ -27,10 +27,37 @@ all:
 	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
+bench:
+	# Run the benchmark
+	$(CC) \
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
+	    $(shell find src benchmark -name *.c) -Iinclude \
+	    -o $(NAME).benchmark
+	./$(NAME).benchmark
+
+bench-test:
+	# Run the benchmark through valgrind and gcov
+	$(CC) \
+	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
+	    $(shell find src benchmark -name *.c) -Iinclude \
+	    -DITERATIONS=100 -o $(NAME).benchmark
+	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
+	    $(shell find src tests -name *.c) \
+	    -Iinclude \
+	    -o $(NAME).tests
+	# If Valgrind exits non-zero, try running 'gdb ./ctemplate.tests'
+	# to debug the test suite
+	valgrind ./$(NAME).benchmark --track-origins=yes
+	mkdir html || rm -rf html/*
+	gcovr -r . --html --html-details -o html/coverage.html
+	$(BROWSER) html/coverage.html &
+	# NOTE: You do not need to cover all lines, this is simply for
+	# 	debugging purposes
+
 clean:
 	# Remove all temporary files
 	rm -rf $(NAME) \
-	    $(NAME).{debug,gprof,pahole,perf,tests} \
+	    $(NAME).{benchmark,debug,gprof,pahole,perf,tests} \
 	    html/* *.gcda *.gcno *.rpm gmon.out pahole.txt profile.txt
 
 debug:
@@ -44,9 +71,10 @@ gprof:
 	# Profile which functions the test suite spends the most time
 	# in using gprof
 	$(CC) $(CC_ARGS) $(OPT_LVL) -pg $(PLAT_FLAGS) \
-	    $(shell find src tests -name *.c) \
+	    $(shell find src benchmark -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).gprof
+	./$(NAME).gprof
 	gprof ./$(NAME).gprof > profile.txt
 	less profile.txt
 
@@ -72,7 +100,7 @@ pahole:
 perf:
 	# Profile system performance counters using perf
 	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
-	    $(shell find src tests -name *.c) \
+	    $(shell find src benchmark -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).perf
 	perf stat -e cache-references,cache-misses,dTLB-loads,\

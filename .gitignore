@@ -1,4 +1,5 @@
 ctemplate
+ctemplate.benchmark
 ctemplate.debug
 ctemplate.gprof
 ctemplate.pahole
