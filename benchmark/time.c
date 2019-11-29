@@ -33,11 +33,13 @@ void TimeFunc(
         units_per_iteration *= 1000.;
     }
 
-    printf(
-	"Ran %s:\n"
-        "  %lu iterations\n"
-        "  %f seconds\n"
-        "  %f %s average per iteration\n",
+    fprintf(
+        stderr,
+	"%s:\n"
+        "  iterations: %lu\n"
+        "  seconds: %f\n"
+        "  average-per-iteration: %f\n"
+        "  iteration-unit: %s\n",
 	name,
         iterations,
 	time_used,

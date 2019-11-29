@@ -28,7 +28,7 @@ all:
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
 bench:
-	# Run the benchmark
+	# Run the benchmark, output the results as YAML to stderr
 	$(CC) \
 	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
