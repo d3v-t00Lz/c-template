@@ -46,7 +46,7 @@ bench-test:
 	valgrind ./$(NAME).benchmark --track-origins=yes
 	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
-		--gcov-exclude=tests \
+		--exclude=tests \
 		-o html/coverage.html
 	$(BROWSER) html/coverage.html &
 	# NOTE: You do not need to cover all lines, this is simply for
@@ -134,6 +134,6 @@ test:
 	valgrind ./$(NAME).tests --track-origins=yes
 	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
-		--gcov-exclude=bench \
+		--exclude=benchmark \
 		-o html/coverage.html
 	$(BROWSER) html/coverage.html &
