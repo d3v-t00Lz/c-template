@@ -1,10 +1,10 @@
-#include "models/test_mystruct.h"
-#include "test_main.h"
+#include "models/bench_mystruct.h"
+#include "bench_main.h"
 
 
 int main(){
-    TestMain();
-    TestMyStruct();
+    BenchMain();
+    BenchMyStruct();
 
     return 0;
 }

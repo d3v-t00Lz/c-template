@@ -4,26 +4,26 @@
 
 #include "../time.h"
 #include "models/mystruct.h"
-#include "test_mystruct.h"
+#include "bench_mystruct.h"
 
 #ifndef ITERATIONS
     #define ITERATIONS 1000000
 #endif
 
-void TestMyStruct(){
+void BenchMyStruct(){
     TimeFunc(
-	TestMyStructFactory,
-	"TestMyStructFactory",
+	BenchMyStructFactory,
+	"BenchMyStructFactory",
         ITERATIONS
     );
     TimeFunc(
-        TestMyStructRepr,
-        "TestMyStructRepr",
+        BenchMyStructRepr,
+        "BenchMyStructRepr",
         ITERATIONS
     );
 }
 
-void TestMyStructFactory(){
+void BenchMyStructFactory(){
     size_t i;
     struct MyStruct mystruct = (struct MyStruct){
         .a = 5,
@@ -37,7 +37,7 @@ void TestMyStructFactory(){
     };
 }
 
-void TestMyStructRepr(){
+void BenchMyStructRepr(){
     size_t i;
     struct MyStruct mystruct = (struct MyStruct){
         .a = 5,

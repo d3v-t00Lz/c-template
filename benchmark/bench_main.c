@@ -1,9 +1,9 @@
 #include <assert.h>
 
 #include "_main.h"
-#include "test_main.h"
+#include "bench_main.h"
 
-void TestMain(){
+void BenchMain(){
     int retcode = _main();
     assert(retcode == 0);
 }
