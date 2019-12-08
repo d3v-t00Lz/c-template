@@ -11,13 +11,13 @@ size_t BenchObjCount(
     return (size_t)(BENCH_SIZE / objSize);
 }
 
-void TimeFunc(
-    size_t (*func)(),
-    char* name
+void TimeSection(
+    clock_t start,
+    clock_t end,
+    char*   name,
+    size_t  iterations
 ){
     int i;
-    size_t iterations;
-    clock_t start, end;
     double time_used, units_per_iteration;
     char* time_unit = NULL;
     char time_units[5][20] = {
@@ -28,9 +28,6 @@ void TimeFunc(
         "picoseconds"
     };
 
-    start = clock();
-    iterations = func();
-    end = clock();
     time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     units_per_iteration = (time_used / (double)(iterations));
 
@@ -54,5 +51,22 @@ void TimeFunc(
 	time_used,
         units_per_iteration,
         time_unit
+    );
+}
+
+void TimeFunc(
+    size_t (*func)(),
+    char* name
+){
+    clock_t start, end;
+    size_t iterations;
+    start = clock();
+    iterations = func();
+    end = clock();
+    TimeSection(
+        start,
+        end,
+        name,
+        iterations
     );
 }
