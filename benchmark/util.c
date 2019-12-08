@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -11,11 +12,11 @@ size_t BenchObjCount(
 }
 
 void TimeFunc(
-    void (*func)(),
-    char* name,
-    size_t iterations
+    size_t (*func)(),
+    char* name
 ){
     int i;
+    size_t iterations;
     clock_t start, end;
     double time_used, units_per_iteration;
     char* time_unit = NULL;
@@ -28,7 +29,7 @@ void TimeFunc(
     };
 
     start = clock();
-    func();
+    iterations = func();
     end = clock();
     time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     units_per_iteration = (time_used / (double)(iterations));

@@ -9,20 +9,26 @@
 #endif
 
 #ifndef BENCH_SIZE_MB
-    #define BENCH_SIZE_MB 100
+    #define BENCH_SIZE_MB 100UL
 #endif
 
-#define BENCH_SIZE (BENCH_SIZE_MB * 1024 * 1024)
+#define BENCH_SIZE (BENCH_SIZE_MB * 1024UL * 1024UL)
 
 
+/* Used for estimating how much memory a collection of objects will consume
+ * in order to comply with BENCH_SIZE
+ *
+ * @objSize: The sizeof() the object to allocate in memory.  Note that you may
+ *           need to add additional values to this to account for all memory
+ *           to be consumed, ie: sizeof(myObject) + sizeof(myObject*)
+ */
 size_t BenchObjCount(
     size_t objSize
 );
 
 void TimeFunc(
-    void (*func)(),
-    char* name,
-    size_t iterations
+    size_t (*func)(),
+    char* name
 );
 
 #endif

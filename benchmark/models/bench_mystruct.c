@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,17 +11,15 @@
 void BenchMyStruct(){
     TimeFunc(
 	BenchMyStructFactory,
-	"BenchMyStructFactory",
-        ITERATIONS
+	"BenchMyStructFactory"
     );
     TimeFunc(
         BenchMyStructRepr,
-        "BenchMyStructRepr",
-        ITERATIONS
+        "BenchMyStructRepr"
     );
 }
 
-void BenchMyStructFactory(){
+size_t BenchMyStructFactory(){
     size_t i;
     struct MyStruct mystruct = (struct MyStruct){
         .a = 5,
@@ -32,9 +31,10 @@ void BenchMyStructFactory(){
         m = MyStructFactory(&mystruct);
         free(m);
     };
+    return ITERATIONS;
 }
 
-void BenchMyStructRepr(){
+size_t BenchMyStructRepr(){
     size_t i;
     struct MyStruct mystruct = (struct MyStruct){
         .a = 5,
@@ -44,4 +44,5 @@ void BenchMyStructRepr(){
         char *str = MyStructRepr(&mystruct);
         free(str);
     }
+    return ITERATIONS;
 }
