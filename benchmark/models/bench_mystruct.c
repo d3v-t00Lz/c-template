@@ -2,13 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../time.h"
+#include "../util.h"
 #include "models/mystruct.h"
 #include "bench_mystruct.h"
 
-#ifndef ITERATIONS
-    #define ITERATIONS 1000000
-#endif
 
 void BenchMyStruct(){
     TimeFunc(

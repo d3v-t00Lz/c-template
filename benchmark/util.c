@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <time.h>
 
+#include "./util.h"
+
+
+size_t BenchObjCount(
+    size_t objSize
+){
+    return (size_t)(BENCH_SIZE / objSize);
+}
 
 void TimeFunc(
     void (*func)(),

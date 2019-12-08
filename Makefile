@@ -21,6 +21,14 @@ DESTDIR ?=
 BINDIR ?= /usr/bin
 INCLUDEDIR ?= /usr/include
 
+# benchmark inputs
+# Tells benchmarks that use the ITERATIONS macro how many iterations to attempt
+BENCH_ITERATIONS ?= 100000000
+# Tells the benchmarks to try not using more than this amount of memory.  It
+# is not guaranteed that this number will not be exceeded
+BENCH_SIZE_MB ?= 500
+
+
 all:
 	# Compile the binary
 	$(CC) \
@@ -32,6 +40,8 @@ bench:
 	$(CC) \
 	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
+	    -DITERATIONS=$(BENCH_ITERATIONS) \
+	    -DBENCH_SIZE_MB=$(BENCH_SIZE_MB) \
 	    -o $(NAME).benchmark
 	./$(NAME).benchmark
 
@@ -40,7 +50,8 @@ bench-test:
 	$(CC) \
 	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
-	    -DITERATIONS=100 -o $(NAME).benchmark
+	    -DITERATIONS=100 -DBENCH_SIZE_MB=1 \
+	    -o $(NAME).benchmark
 	# If Valgrind exits non-zero, try running 'gdb ./ctemplate.tests'
 	# to debug the test suite
 	valgrind ./$(NAME).benchmark --track-origins=yes
