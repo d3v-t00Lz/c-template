@@ -2,26 +2,36 @@
 
 NAME ?= ctemplate
 
+# Compiler flags
 CC ?= gcc
 CC_ARGS ?= -Wall -fPIC
 OPT_LVL ?= -O2
 # These assume a modern x86 CPU, change or remove for other platforms
 PLAT_FLAGS ?= -mfpmath=sse -mssse3
 
-# Only used with the 'debug' target.  -g used for tools other than gdb.
+# Debugging flags
+# Use -g used for tools other than gdb.
 DEBUG_FLAGS ?= -ggdb3
 DEBUGGER ?= gdb
 
-ARCH ?= $(shell uname --machine)
-
+# Coverage report flags
 GCOVARGS ?= -fprofile-arcs -ftest-coverage  # -fPIC
+# Coverage reports will open in this browser
 BROWSER ?= firefox-wayland
 
+# Install and packaging flags
 DESTDIR ?=
 BINDIR ?= /usr/bin
 INCLUDEDIR ?= /usr/include
+ARCH ?= $(shell uname --machine)
 
-# benchmark inputs
+# `make perf` counters
+PERF_COUNTERS ?= "cache-references,cache-misses,dTLB-loads,\
+dTLB-load-misses,iTLB-loads,iTLB-load-misses,L1-dcache-loads,\
+L1-dcache-load-misses,L1-icache-loads,L1-icache-load-misses,\
+branch-misses,LLC-loads,LLC-load-misses"
+
+# Benchmark flags
 # Tells benchmarks that use the ITERATIONS macro how many iterations to attempt
 BENCH_ITERATIONS ?= 100000000
 # Tells the benchmarks to try not using more than this amount of memory.  It
@@ -48,7 +58,7 @@ bench:
 bench-test:
 	# Run the benchmark through valgrind and gcov
 	$(CC) \
-	    $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
+	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(GCOVARGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
 	    -DITERATIONS=100 -DBENCH_SIZE_MB=1 \
 	    -o $(NAME).benchmark
@@ -105,10 +115,12 @@ lines-of-code:
 	find tests -name '*.c' -exec cat {} \; | wc -l
 	# headers
 	find include -name '*.h' -exec cat {} \; | wc -l
+	# benchmarks
+	find benchmark -name '*.c' -exec cat {} \; | wc -l
 
 pahole:
 	# Check struct alignnment using pahole
-	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) \
+	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).pahole
@@ -121,10 +133,7 @@ perf:
 	    $(shell find src benchmark -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).perf
-	perf stat -e cache-references,cache-misses,dTLB-loads,\
-	dTLB-load-misses,iTLB-loads,iTLB-load-misses,L1-dcache-loads,\
-	L1-dcache-load-misses,L1-icache-loads,L1-icache-load-misses,\
-	branch-misses,LLC-loads,LLC-load-misses ./$(NAME).perf
+	perf stat -e $(PERF_COUNTERS) ./$(NAME).perf
 
 rpm:
 	# Generate an RPM package
@@ -145,7 +154,7 @@ test:
 	# Compile and run the test suite through Valgrind to check for
 	# memory errors, then generate an HTML code coverage report
 	# using gcovr
-	$(CC) $(CC_ARGS) -O0 -g $(PLAT_FLAGS) $(GCOVARGS) \
+	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(GCOVARGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).tests
