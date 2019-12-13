@@ -1,12 +1,13 @@
 bench.out
+coverage*.html
 ctemplate
 ctemplate.benchmark
 ctemplate.debug
 ctemplate.gprof
 ctemplate.pahole
 ctemplate.perf
+ctemplate.so
 ctemplate.tests
-coverage*.html
 gmon.out
 pahole.txt
 profile.txt

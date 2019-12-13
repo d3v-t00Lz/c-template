@@ -150,6 +150,12 @@ rpm:
 		-D "name $(NAME)"
 	cp ~/rpmbuild/RPMS/$(ARCH)/$(NAME)-$(version)-1.$(ARCH).rpm .
 
+shared:
+	# Compile the shared library
+	$(CC) \
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) -shared \
+	    $(shell find src -name *.c) -Iinclude -o $(NAME).so
+
 test:
 	# Compile and run the test suite through Valgrind to check for
 	# memory errors, then generate an HTML code coverage report
