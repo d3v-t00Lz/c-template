@@ -33,10 +33,10 @@ branch-misses,LLC-loads,LLC-load-misses"
 
 # Benchmark flags
 # Tells benchmarks that use the ITERATIONS macro how many iterations to attempt
-BENCH_ITERATIONS ?= 100000000
+BENCH_ITERATIONS ?= 100000000UL
 # Tells the benchmarks to try not using more than this amount of memory.  It
 # is not guaranteed that this number will not be exceeded
-BENCH_SIZE_MB ?= 500
+BENCH_SIZE_MB ?= 500UL
 
 
 all:
