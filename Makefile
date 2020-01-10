@@ -6,6 +6,7 @@ NAME ?= ctemplate
 CC ?= gcc
 CC_ARGS ?= -Wall -fPIC
 OPT_LVL ?= -O2
+LINK_FLAGS ?=
 # These assume a modern x86 CPU, change or remove for other platforms
 PLAT_FLAGS ?= -mfpmath=sse -mssse3
 
@@ -42,13 +43,13 @@ BENCH_SIZE_MB ?= 500UL
 all:
 	# Compile the binary
 	$(CC) \
-	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
 
 bench:
 	# Run the benchmark, output the results as YAML to stderr
 	$(CC) \
-	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
 	    -DITERATIONS=$(BENCH_ITERATIONS) \
 	    -DBENCH_SIZE_MB=$(BENCH_SIZE_MB) \
@@ -59,6 +60,7 @@ bench-test:
 	# Run the benchmark through valgrind and gcov
 	$(CC) \
 	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(GCOVARGS) \
+	    $(LINK_FLAGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
 	    -DITERATIONS=100 -DBENCH_SIZE_MB=1 \
 	    -o $(NAME).benchmark
@@ -83,14 +85,14 @@ clean:
 debug:
 	# Compile the binary with the appropriate flags to debug in GDB
 	$(CC) \
-	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) \
+	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(LINK_FLAGS) \
 	    $(shell find src cli -name *.c) -Iinclude -o $(NAME).debug
 	$(DEBUGGER) ./$(NAME).debug
 
 gprof:
 	# Profile which functions the test suite spends the most time
 	# in using gprof
-	$(CC) $(CC_ARGS) $(OPT_LVL) -pg $(PLAT_FLAGS) \
+	$(CC) $(CC_ARGS) $(OPT_LVL) -pg $(PLAT_FLAGS) $(LINK_FLAGS) \
 	    $(shell find src benchmark -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).gprof
@@ -120,7 +122,7 @@ lines-of-code:
 
 pahole:
 	# Check struct alignnment using pahole
-	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) \
+	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(LINK_FLAGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).pahole
@@ -129,7 +131,7 @@ pahole:
 
 perf:
 	# Profile system performance counters using perf
-	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
+	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) \
 	    $(shell find src benchmark -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).perf
@@ -153,14 +155,15 @@ rpm:
 shared:
 	# Compile the shared library
 	$(CC) \
-	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) -shared \
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) -shared \
 	    $(shell find src -name *.c) -Iinclude -o $(NAME).so
 
 test:
 	# Compile and run the test suite through Valgrind to check for
 	# memory errors, then generate an HTML code coverage report
 	# using gcovr
-	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(GCOVARGS) \
+	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(LINK_FLAGS) \
+	    $(GCOVARGS) \
 	    $(shell find src tests -name *.c) \
 	    -Iinclude \
 	    -o $(NAME).tests
