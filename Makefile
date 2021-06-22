@@ -43,27 +43,26 @@ BENCH_SIZE_MB ?= 500UL
 all:
 	# Compile the binary
 	$(CC) \
-	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) \
-	    $(shell find src cli -name *.c) -Iinclude -o $(NAME)
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
+	    $(shell find src cli -name *.c) -Iinclude $(LINK_FLAGS) -o $(NAME)
 
 bench:
 	# Run the benchmark, output the results as YAML to stderr
 	$(CC) \
-	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) \
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
 	    -DITERATIONS=$(BENCH_ITERATIONS) \
 	    -DBENCH_SIZE_MB=$(BENCH_SIZE_MB) \
-	    -o $(NAME).benchmark
+	    $(LINK_FLAGS) -o $(NAME).benchmark
 	./$(NAME).benchmark
 
 bench-test:
 	# Run the benchmark through valgrind and gcov
 	$(CC) \
 	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(GCOVARGS) \
-	    $(LINK_FLAGS) \
 	    $(shell find src benchmark -name *.c) -Iinclude \
 	    -DITERATIONS=100 -DBENCH_SIZE_MB=1 \
-	    -o $(NAME).benchmark
+	    $(LINK_FLAGS) -o $(NAME).benchmark
 	# If Valgrind exits non-zero, try running 'gdb ./ctemplate.tests'
 	# to debug the test suite
 	valgrind ./$(NAME).benchmark --track-origins=yes
@@ -85,17 +84,17 @@ clean:
 debug:
 	# Compile the binary with the appropriate flags to debug in GDB
 	$(CC) \
-	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(LINK_FLAGS) \
-	    $(shell find src cli -name *.c) -Iinclude -o $(NAME).debug
+	    $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) \
+	    $(shell find src cli -name *.c) -Iinclude $(LINK_FLAGS) \
+	   	-o $(NAME).debug
 	$(DEBUGGER) ./$(NAME).debug
 
 gprof:
 	# Profile which functions the test suite spends the most time
 	# in using gprof
-	$(CC) $(CC_ARGS) $(OPT_LVL) -pg $(PLAT_FLAGS) $(LINK_FLAGS) \
+	$(CC) $(CC_ARGS) $(OPT_LVL) -pg $(PLAT_FLAGS) \
 	    $(shell find src benchmark -name *.c) \
-	    -Iinclude \
-	    -o $(NAME).gprof
+	    -Iinclude $(LINK_FLAGS) -o $(NAME).gprof
 	./$(NAME).gprof
 	gprof ./$(NAME).gprof > profile.txt
 	less profile.txt
@@ -122,19 +121,17 @@ lines-of-code:
 
 pahole:
 	# Check struct alignnment using pahole
-	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(LINK_FLAGS) \
+	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) \
 	    $(shell find src tests -name *.c) \
-	    -Iinclude \
-	    -o $(NAME).pahole
+	    -Iinclude $(LINK_FLAGS) -o $(NAME).pahole
 	pahole $(NAME).pahole > pahole.txt
 	less pahole.txt
 
 perf:
 	# Profile system performance counters using perf
-	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) \
+	$(CC) $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) \
 	    $(shell find src benchmark -name *.c) \
-	    -Iinclude \
-	    -o $(NAME).perf
+	    -Iinclude $(LINK_FLAGS) -o $(NAME).perf
 	perf stat -e $(PERF_COUNTERS) ./$(NAME).perf
 
 rpm:
@@ -155,18 +152,16 @@ rpm:
 shared:
 	# Compile the shared library
 	$(CC) \
-	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) $(LINK_FLAGS) -shared \
-	    $(shell find src -name *.c) -Iinclude -o $(NAME).so
+	    $(CC_ARGS) $(OPT_LVL) $(PLAT_FLAGS) -shared \
+	    $(shell find src -name *.c) -Iinclude $(LINK_FLAGS) -o $(NAME).so
 
 test:
 	# Compile and run the test suite through Valgrind to check for
 	# memory errors, then generate an HTML code coverage report
 	# using gcovr
-	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(LINK_FLAGS) \
-	    $(GCOVARGS) \
+	$(CC) $(CC_ARGS) -O0 $(DEBUG_FLAGS) $(PLAT_FLAGS) $(GCOVARGS) \
 	    $(shell find src tests -name *.c) \
-	    -Iinclude \
-	    -o $(NAME).tests
+	    -Iinclude $(LINK_FLAGS) -o $(NAME).tests
 	# If Valgrind exits non-zero, try running 'gdb ./ctemplate.tests'
 	# to debug the test suite
 	valgrind ./$(NAME).tests --track-origins=yes
