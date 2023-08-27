@@ -4,28 +4,24 @@
 
 #include "models/mystruct.h"
 
-struct MyStruct *MyStructFactory(
-    struct MyStruct *m
-){
-    struct MyStruct *mystruct = (struct MyStruct*)malloc(
-        sizeof(struct MyStruct)
-    );
-    *mystruct = *m;
-    return mystruct;
-}
-
-char* MyStructRepr(
+void MyStructFactory(
     struct MyStruct *self
 ){
-    int size = 40;
-    char *repr = (char*)malloc(size);
+    // Of course, you would want some real logic here
+    *self = (struct MyStruct){.a = 5, .b = "lol"};
+}
+
+void MyStructRepr(
+    struct MyStruct *self,
+    char *buf,
+    size_t size
+){
     int written = snprintf(
-        repr,
+        buf,
         40,
         "%s%i",
         self->b,
         self->a
     );
     assert(written < size);
-    return repr;
 }

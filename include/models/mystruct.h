@@ -8,18 +8,16 @@ struct MyStruct{
     char b[20];
 };
 
-/* Allocates a new MyStruct on the heap
- *
- * @m: A MyStruct* to initialize from, use {} for default \0 values
+/* Initialize a new MyStruct
  */
-struct MyStruct *MyStructFactory(
-    struct MyStruct *m
-);
+void MyStructFactory();
 
 /* Return a string representation of @self on the heap
  */
-char* MyStructRepr(
-    struct MyStruct *self
+void MyStructRepr(
+    struct MyStruct *self,
+    char *buf,
+    size_t size
 );
 
 #endif  /* MYSTRUCT_H */

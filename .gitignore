@@ -9,6 +9,7 @@ ctemplate.perf
 ctemplate.so
 ctemplate.tests
 gmon.out
+html/
 pahole.txt
 profile.txt
 *.gcda

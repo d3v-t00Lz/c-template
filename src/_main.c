@@ -5,17 +5,12 @@
 
 
 int _main(){
-    struct MyStruct *mystruct = MyStructFactory(
-        &(struct MyStruct){
-            .a = 5,
-            .b = "lol",
-        }
-    );
+    struct MyStruct mystruct;
+    MyStructFactory(&mystruct);
     printf(
         "Hello, World!\n%i\n%s\n",
-        mystruct->a,
-        mystruct->b
+        mystruct.a,
+        mystruct.b
     );
-    free(mystruct);
     return 0;
 }

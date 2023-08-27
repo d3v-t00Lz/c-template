@@ -12,15 +12,10 @@ void TestMyStruct(){
 }
 
 void TestMyStructFactory(){
-    struct MyStruct mystruct = (struct MyStruct){
-        .a = 5,
-        .b = "lol",
-    };
-
-    struct MyStruct *m = MyStructFactory(&mystruct);
-    assert(m->a == mystruct.a);
-    assert(strcmp(m->b, mystruct.b) == 0);
-    free(m);
+    struct MyStruct mystruct;
+    MyStructFactory(&mystruct);
+    assert(mystruct.a == 5);
+    assert(!strcmp(mystruct.b, "lol"));
 }
 
 void TestMyStructRepr(){
@@ -28,7 +23,7 @@ void TestMyStructRepr(){
         .a = 5,
         .b = "lol",
     };
-    char *str = MyStructRepr(&mystruct);
-    assert(str);
-    free(str);
+    char str[40] = "";
+    MyStructRepr(&mystruct, str, 40);
+    assert(!strcmp(str, "lol5"));
 }
